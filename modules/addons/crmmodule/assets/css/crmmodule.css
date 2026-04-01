@@ -1,0 +1,529 @@
+/**
+ * CRMModule — Stylesheet
+ *
+ * Uses only Bootstrap-compatible utility classes and minimal custom rules.
+ * No hardcoded brand colors — accent colors use CSS custom properties with
+ * safe fallbacks so the stylesheet works across all WHMCS themes including
+ * Six, Twenty-One, and Lagom2.
+ *
+ * @package    CRMModule
+ * @author     HostingSpell LLP
+ */
+
+/* ============================================================
+   CSS Custom Properties (theme-agnostic defaults)
+   ============================================================ */
+:root {
+    --crm-accent:        #337ab7;   /* Bootstrap primary blue */
+    --crm-accent-hover:  #286090;
+    --crm-muted:         #777;
+    --crm-border:        #ddd;
+    --crm-radius:        4px;
+    --crm-radius-lg:     8px;
+    --crm-shadow:        0 1px 4px rgba(0,0,0,.08);
+    --crm-avatar-sm:     32px;
+    --crm-avatar-md:     64px;
+    --crm-avatar-lg:     96px;
+    --crm-avatar-xl:     120px;
+}
+
+/* ============================================================
+   Admin Area — General Layout
+   ============================================================ */
+.crm-admin-wrap {
+    padding: 0 4px;
+}
+
+.crm-page-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--crm-border);
+}
+
+.crm-page-title {
+    margin: 0 0 4px;
+    font-size: 22px;
+}
+
+.crm-page-subtitle {
+    margin: 0;
+    color: var(--crm-muted);
+    font-size: 13px;
+}
+
+.crm-nav-tabs {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.crm-tab-content {
+    padding-top: 20px;
+}
+
+.crm-panel {
+    box-shadow: var(--crm-shadow);
+}
+
+.crm-info-panel {
+    margin-top: 20px;
+}
+
+/* ============================================================
+   Admin Area — Dashboard: Group Mapping Table
+   ============================================================ */
+.crm-table {
+    margin-bottom: 0;
+}
+
+.crm-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #555;
+}
+
+.crm-group-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.crm-admin-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.crm-avatar-sm {
+    width: var(--crm-avatar-sm);
+    height: var(--crm-avatar-sm);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--crm-border);
+}
+
+.crm-avatar-placeholder-sm {
+    width: var(--crm-avatar-sm);
+    height: var(--crm-avatar-sm);
+    border-radius: 50%;
+    background: #e9ecef;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.crm-inline-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.crm-select-admin {
+    max-width: 180px;
+    min-width: 120px;
+}
+
+.crm-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* How it works steps */
+.crm-how-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.crm-step-number {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--crm-accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* ============================================================
+   Admin Area — Profiles List
+   ============================================================ */
+.crm-new-profile-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.crm-new-profile-btn {
+    white-space: nowrap;
+}
+
+.crm-profile-cards {
+    margin-top: 4px;
+}
+
+.crm-profile-card {
+    box-shadow: var(--crm-shadow);
+    transition: box-shadow .15s;
+}
+
+.crm-profile-card:hover {
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
+
+.crm-profile-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.crm-avatar-lg {
+    width: var(--crm-avatar-lg);
+    height: var(--crm-avatar-lg);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--crm-border);
+    flex-shrink: 0;
+}
+
+.crm-profile-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.crm-profile-name {
+    display: block;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.crm-profile-designation {
+    display: block;
+    font-size: 12px;
+    color: var(--crm-muted);
+    margin-top: 2px;
+}
+
+.crm-profile-bio {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.crm-profile-contact {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.8;
+}
+
+.crm-profile-card-footer {
+    display: flex;
+    gap: 6px;
+    padding: 8px 15px;
+}
+
+/* ============================================================
+   Admin Area — Edit Profile
+   ============================================================ */
+.crm-preview-wrap {
+    margin-bottom: 12px;
+}
+
+.crm-avatar-preview {
+    width: var(--crm-avatar-xl);
+    height: var(--crm-avatar-xl);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--crm-border);
+}
+
+.crm-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   Admin Area — Ticket Sidebar Injection
+   ============================================================ */
+.crm-ticket-sidebar-block {
+    margin: 10px 0;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border: 1px solid var(--crm-border);
+    border-radius: var(--crm-radius);
+    font-size: 13px;
+}
+
+.crm-ticket-group-row,
+.crm-ticket-crm-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.crm-ticket-crm-row:last-child {
+    margin-bottom: 0;
+}
+
+.crm-ticket-label {
+    font-weight: 600;
+    color: #555;
+    min-width: 120px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+
+.crm-ticket-crm-name {
+    color: #333;
+}
+
+.crm-ticket-designation {
+    color: var(--crm-muted);
+    font-size: 11px;
+}
+
+.crm-ticket-unassigned {
+    font-size: 12px;
+}
+
+/* ============================================================
+   Client Area — Homepage Widget
+   ============================================================ */
+.crm-widget {
+    margin-bottom: 20px;
+    box-shadow: var(--crm-shadow);
+}
+
+.crm-widget-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.crm-widget-avatar-wrap {
+    flex-shrink: 0;
+}
+
+.crm-widget-avatar {
+    width: var(--crm-avatar-md);
+    height: var(--crm-avatar-md);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--crm-border);
+}
+
+.crm-widget-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.crm-widget-name {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.crm-widget-designation {
+    display: block;
+    font-size: 12px;
+    color: var(--crm-muted);
+    margin-bottom: 6px;
+}
+
+.crm-widget-bio {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.crm-widget-btn {
+    margin-top: 4px;
+}
+
+/* ============================================================
+   Client Area — Ticket Strip (optional)
+   ============================================================ */
+.crm-ticket-client-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: #f0f7ff;
+    border: 1px solid #cce0ff;
+    border-radius: var(--crm-radius);
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.crm-strip-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.crm-strip-text {
+    color: #444;
+}
+
+/* ============================================================
+   Client Area — CRM Profile Page
+   ============================================================ */
+.crm-client-profile-wrap {
+    padding: 10px 0;
+}
+
+.crm-profile-sidebar {
+    margin-bottom: 24px;
+}
+
+.crm-profile-avatar-card {
+    text-align: center;
+    padding: 24px 16px;
+    background: #fff;
+    border: 1px solid var(--crm-border);
+    border-radius: var(--crm-radius-lg);
+    box-shadow: var(--crm-shadow);
+}
+
+.crm-avatar-circle {
+    margin-bottom: 14px;
+}
+
+.crm-client-avatar {
+    width: var(--crm-avatar-xl);
+    height: var(--crm-avatar-xl);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+.crm-client-name {
+    margin: 0 0 4px;
+    font-size: 20px;
+}
+
+.crm-client-designation {
+    color: var(--crm-muted);
+    font-size: 13px;
+    margin: 0 0 12px;
+}
+
+.crm-group-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 2px solid;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.crm-contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.crm-client-panel {
+    box-shadow: var(--crm-shadow);
+}
+
+.crm-bio-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+.crm-contact-details dt {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    color: #666;
+}
+
+.crm-contact-details dd {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.crm-howto-panel {
+    margin-top: 16px;
+}
+
+.crm-no-manager-wrap {
+    padding: 60px 20px;
+}
+
+.crm-no-manager-icon {
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   Responsive adjustments
+   ============================================================ */
+@media (max-width: 767px) {
+
+    .crm-widget-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .crm-inline-form {
+        flex-wrap: wrap;
+    }
+
+    .crm-select-admin {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .crm-profile-card-top {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .crm-how-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .crm-ticket-sidebar-block {
+        font-size: 12px;
+    }
+
+    .crm-ticket-label {
+        min-width: 80px;
+    }
+}
