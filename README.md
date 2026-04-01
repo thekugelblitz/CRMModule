@@ -34,23 +34,29 @@ CRMModule enhances the native WHMCS Client Group system by introducing a CRM (Cl
 
 ---
 
-## Installation
+## Repository layout (this Git repo)
 
-### Step 1 — Upload Files
+The **root of this repository** is the addon itself (`crmmodule` module folder). It is **not** nested under `modules/addons/` in Git so you can use **cPanel → Git™ Version Control** (or any deploy tool) and point the deployment directory at WHMCS’s addon path.
 
-Upload the entire `modules/addons/crmmodule/` directory to your WHMCS installation, preserving the directory structure:
+On the server, the checkout must end up as:
 
-```
-<whmcs_root>/
-└── modules/
-    └── addons/
-        └── crmmodule/
-            ├── crmmodule.php
-            ├── hooks.php
-            ├── lib/
-            ├── templates/
-            └── assets/
-```
+`<whmcs_root>/modules/addons/crmmodule/`  
+(same files you see at repo root: `crmmodule.php`, `hooks.php`, `lib/`, `templates/`, `assets/`).
+
+### cPanel Git Version Control
+
+1. Create or use this repository in cPanel Git.
+2. Set the **deployment path** (or clone target) to:
+   `public_html/path/to/whmcs/modules/addons/crmmodule`  
+   (adjust `public_html/...` to match your WHMCS install).
+3. Deploy / pull so the repo root contents fill that `crmmodule` folder.
+4. Ensure `assets/uploads/` is writable by the web user (see below).
+
+### Manual installation
+
+Copy or upload **all files from the repo root** into:
+
+`<whmcs_root>/modules/addons/crmmodule/`
 
 ### Step 2 — Set Directory Permissions
 
@@ -111,10 +117,10 @@ Core WHMCS tables are used **read-only** only.
 
 ---
 
-## File Structure
+## File Structure (this repository)
 
 ```
-modules/addons/crmmodule/
+./
 ├── crmmodule.php
 ├── hooks.php
 ├── lib/
@@ -126,8 +132,10 @@ modules/addons/crmmodule/
 └── assets/
     ├── css/crmmodule.css
     ├── js/crmmodule.js
-    └── uploads/
+    └── uploads/        # .gitkeep only; profile images stored here at runtime
 ```
+
+On a WHMCS server, this tree must live under `modules/addons/crmmodule/`.
 
 ---
 
