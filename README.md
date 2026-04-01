@@ -145,6 +145,7 @@ On a WHMCS server, this tree must live under `modules/addons/crmmodule/`.
 |------|---------|
 | `AdminAreaPageViewTicket` | Client Group + CRM in admin ticket sidebar |
 | `ClientAreaHomepage` | CRM widget on client dashboard |
+| `ClientAreaSecondaryNavbar` | **Client Relationship Manager** link in the Account / user dropdown (Six, Twenty-One, Lagom, and other themes using the standard WHMCS menu) |
 | `ClientAreaPageViewTicket` | CRM strip on client ticket view |
 
 ---

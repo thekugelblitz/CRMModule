@@ -152,7 +152,87 @@ add_hook('ClientAreaHomepage', 1, function (array $vars) {
 });
 
 // =============================================================================
-// Hook 3: Client Area — Ticket View (optional: show client group on client side)
+// Hook 3: Client Area — Account dropdown (user menu / Lagom profile menu)
+//
+// Adds a "Client Relationship Manager" link at the top of the Account dropdown
+// (below the header with the client name, above "Account Details"). Uses
+// ClientAreaSecondaryNavbar per WHMCS docs; parent item is usually "Account".
+// See: https://docs.whmcs.com/Client_Area_Navigation_Menus_Cheatsheet
+// =============================================================================
+add_hook('ClientAreaSecondaryNavbar', 1, function ($secondaryNavbar) {
+
+    $clientId = isset($_SESSION['uid']) ? (int) $_SESSION['uid'] : 0;
+    if ($clientId <= 0) {
+        return;
+    }
+
+    $helper = new CRMModule\CrmHelper();
+    $crm    = $helper->getCrmForClient($clientId);
+    if (!$crm) {
+        return;
+    }
+
+    if (!is_object($secondaryNavbar) || !method_exists($secondaryNavbar, 'getChild')) {
+        return;
+    }
+
+    $accountMenu = null;
+    foreach (['Account', 'My Account', 'User'] as $menuName) {
+        $accountMenu = $secondaryNavbar->getChild($menuName);
+        if ($accountMenu !== null) {
+            break;
+        }
+    }
+
+    if ($accountMenu === null && method_exists($secondaryNavbar, 'getChildren')) {
+        $topLevel = $secondaryNavbar->getChildren();
+        if (!is_array($topLevel) && !($topLevel instanceof \Traversable)) {
+            $topLevel = [];
+        }
+        foreach ($topLevel as $topItem) {
+            if (!is_object($topItem) || !method_exists($topItem, 'getChildren')) {
+                continue;
+            }
+            $subs = $topItem->getChildren();
+            if (!is_array($subs) && !($subs instanceof \Traversable)) {
+                continue;
+            }
+            foreach ($subs as $subItem) {
+                if (!method_exists($subItem, 'getUri')) {
+                    continue;
+                }
+                $uri = (string) $subItem->getUri();
+                if ($uri !== '' && (
+                    stripos($uri, 'clientarea.php') !== false && stripos($uri, 'action=details') !== false
+                )) {
+                    $accountMenu = $topItem;
+                    break 2;
+                }
+            }
+        }
+    }
+
+    if ($accountMenu === null || !method_exists($accountMenu, 'addChild')) {
+        return;
+    }
+
+    $name = $crm['display_name'];
+    if (function_exists('mb_strlen') && mb_strlen($name) > 42) {
+        $name = mb_substr($name, 0, 39) . '…';
+    }
+
+    $label = 'Client Relationship Manager: ' . $name;
+
+    $accountMenu->addChild('crm_module_relationship_manager', [
+        'label' => $label,
+        'uri'   => 'index.php?m=crmmodule',
+        'order' => 1,
+        'icon'  => 'fas fa-user-tie',
+    ]);
+});
+
+// =============================================================================
+// Hook 4: Client Area — Ticket View (optional: show client group on client side)
 //
 // Injects a subtle "Your Account Manager" info strip on the client-facing
 // ticket view. Only shows if the client has a CRM assigned.
