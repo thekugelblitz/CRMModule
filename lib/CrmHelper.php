@@ -19,6 +19,28 @@ if (!defined('WHMCS')) {
 
 class CrmHelper
 {
+    /** @var bool|null Cached: tblclientgroups.color exists (added in newer WHMCS; absent on older installs) */
+    private static ?bool $clientGroupsHasColor = null;
+
+    /** Default badge colour when tblclientgroups.color is unavailable or empty */
+    private const DEFAULT_GROUP_COLOR = '#337ab7';
+
+    /**
+     * Whether tblclientgroups has a color column (detected once per request).
+     */
+    private static function clientGroupsHasColorColumn(): bool
+    {
+        if (self::$clientGroupsHasColor === null) {
+            try {
+                self::$clientGroupsHasColor = Capsule::schema()->hasColumn('tblclientgroups', 'color');
+            } catch (\Throwable $e) {
+                self::$clientGroupsHasColor = false;
+            }
+        }
+
+        return self::$clientGroupsHasColor;
+    }
+
     /**
      * Returns the client's group information (read-only from core tables).
      *
@@ -27,8 +49,13 @@ class CrmHelper
      */
     public function getClientGroup(int $clientId): ?array
     {
+        $select = ['tblclients.groupid', 'tblclientgroups.groupname'];
+        if (self::clientGroupsHasColorColumn()) {
+            $select[] = 'tblclientgroups.color';
+        }
+
         $row = Capsule::table('tblclients')
-            ->select('tblclients.groupid', 'tblclientgroups.groupname', 'tblclientgroups.color')
+            ->select($select)
             ->leftJoin('tblclientgroups', 'tblclients.groupid', '=', 'tblclientgroups.id')
             ->where('tblclients.id', $clientId)
             ->first();
@@ -37,10 +64,15 @@ class CrmHelper
             return null;
         }
 
+        $color = self::DEFAULT_GROUP_COLOR;
+        if (self::clientGroupsHasColorColumn() && !empty($row->color)) {
+            $color = $row->color;
+        }
+
         return [
             'group_id'    => (int) $row->groupid,
             'group_name'  => $row->groupname ?? 'Unknown Group',
-            'group_color' => $row->color ?? '#6c757d',
+            'group_color' => $color,
         ];
     }
 
@@ -139,19 +171,25 @@ class CrmHelper
      */
     public function getAllGroupMappings(): array
     {
+        $select = [
+            'tblclientgroups.id as group_id',
+            'tblclientgroups.groupname',
+        ];
+        if (self::clientGroupsHasColorColumn()) {
+            $select[] = 'tblclientgroups.color';
+        }
+        $select = array_merge($select, [
+            'mod_crm_group_map.admin_id',
+            'tbladmins.firstname',
+            'tbladmins.lastname',
+            'mod_crm_profiles.display_name',
+            'mod_crm_profiles.profile_image',
+            'mod_crm_profiles.contact_email',
+            'mod_crm_profiles.designation',
+        ]);
+
         $rows = Capsule::table('tblclientgroups')
-            ->select(
-                'tblclientgroups.id as group_id',
-                'tblclientgroups.groupname',
-                'tblclientgroups.color',
-                'mod_crm_group_map.admin_id',
-                'tbladmins.firstname',
-                'tbladmins.lastname',
-                'mod_crm_profiles.display_name',
-                'mod_crm_profiles.profile_image',
-                'mod_crm_profiles.contact_email',
-                'mod_crm_profiles.designation'
-            )
+            ->select($select)
             ->leftJoin('mod_crm_group_map', 'tblclientgroups.id', '=', 'mod_crm_group_map.group_id')
             ->leftJoin('tbladmins', 'mod_crm_group_map.admin_id', '=', 'tbladmins.id')
             ->leftJoin('mod_crm_profiles', 'tbladmins.id', '=', 'mod_crm_profiles.admin_id')
@@ -164,10 +202,14 @@ class CrmHelper
             if ($row->admin_id) {
                 $adminName = $row->display_name ?: trim($row->firstname . ' ' . $row->lastname);
             }
+            $groupColor = self::DEFAULT_GROUP_COLOR;
+            if (self::clientGroupsHasColorColumn() && !empty($row->color)) {
+                $groupColor = $row->color;
+            }
             $result[] = [
                 'group_id'    => (int) $row->group_id,
                 'group_name'  => $row->groupname,
-                'group_color' => $row->color ?: '#6c757d',
+                'group_color' => $groupColor,
                 'admin_id'    => $row->admin_id ? (int) $row->admin_id : null,
                 'admin_name'  => $adminName,
                 'designation' => $row->designation ?? '',
