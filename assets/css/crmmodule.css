@@ -364,6 +364,24 @@
     margin-top: 4px;
 }
 
+.crm-widget-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.crm-widget-btn-secondary {
+    margin-top: 0;
+}
+
+.crm-contact-hint {
+    margin-top: 10px;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
 /* ============================================================
    Client Area — Ticket Strip (optional)
    ============================================================ */
@@ -389,6 +407,11 @@
 
 .crm-strip-text {
     color: #444;
+}
+
+.crm-strip-ticket-link {
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 /* ============================================================

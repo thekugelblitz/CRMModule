@@ -127,8 +127,9 @@ Core WHMCS tables are used **read-only** only.
 │   ├── CrmHelper.php
 │   └── AdminController.php
 ├── templates/
+│   ├── profile.tpl     # Client area addon page (templatefile => profile)
 │   ├── admin/          # dashboard.php, profiles.php, edit_profile.php
-│   └── clientarea/     # profile.tpl, widget.tpl
+│   └── clientarea/     # optional (e.g. widget.tpl)
 └── assets/
     ├── css/crmmodule.css
     ├── js/crmmodule.js

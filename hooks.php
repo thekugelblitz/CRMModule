@@ -85,7 +85,7 @@ add_hook('AdminAreaPageViewTicket', 1, function (array $vars) {
 // =============================================================================
 add_hook('ClientAreaHomepage', 1, function (array $vars) {
 
-    $clientId = isset($_SESSION['uid']) ? (int) $_SESSION['uid'] : 0;
+    $clientId = CRMModule\CrmHelper::currentClientId();
 
     if (!$clientId) {
         return;
@@ -111,9 +111,9 @@ add_hook('ClientAreaHomepage', 1, function (array $vars) {
 
     $name        = htmlspecialchars($crm['display_name']);
     $designation = htmlspecialchars($crm['designation']);
-    $bio         = htmlspecialchars(mb_substr($crm['bio'], 0, 90)) . (mb_strlen($crm['bio']) > 90 ? '…' : '');
     $imgSrc      = htmlspecialchars($imgUrl);
     $profileHref = htmlspecialchars($profileUrl);
+    $ticketHref  = htmlspecialchars($systemUrl . '/submitticket.php');
     $cssUrl      = htmlspecialchars($systemUrl . '/modules/addons/crmmodule/assets/css/crmmodule.css');
 
     $html  = '<link rel="stylesheet" href="' . $cssUrl . '">';
@@ -135,13 +135,14 @@ add_hook('ClientAreaHomepage', 1, function (array $vars) {
         $html .= '<span class="crm-widget-designation">' . $designation . '</span>';
     }
 
-    if ($bio) {
-        $html .= '<p class="crm-widget-bio">' . $bio . '</p>';
-    }
-
-    $html .= '<a href="' . $profileHref . '" class="btn btn-sm btn-primary crm-widget-btn">';
-    $html .= '<i class="fas fa-id-card"></i> View Profile';
+    $html .= '<div class="crm-widget-actions">';
+    $html .= '<a href="' . $ticketHref . '" class="btn btn-sm btn-primary crm-widget-btn">';
+    $html .= '<i class="fas fa-ticket-alt"></i> Contact via support ticket';
     $html .= '</a>';
+    $html .= '<a href="' . $profileHref . '" class="btn btn-sm btn-default crm-widget-btn crm-widget-btn-secondary">';
+    $html .= '<i class="fas fa-id-card"></i> View profile';
+    $html .= '</a>';
+    $html .= '</div>';
 
     $html .= '</div>';
     $html .= '</div>';
@@ -161,7 +162,7 @@ add_hook('ClientAreaHomepage', 1, function (array $vars) {
 // =============================================================================
 add_hook('ClientAreaSecondaryNavbar', 1, function ($secondaryNavbar) {
 
-    $clientId = isset($_SESSION['uid']) ? (int) $_SESSION['uid'] : 0;
+    $clientId = CRMModule\CrmHelper::currentClientId();
     if ($clientId <= 0) {
         return;
     }
@@ -239,7 +240,7 @@ add_hook('ClientAreaSecondaryNavbar', 1, function ($secondaryNavbar) {
 // =============================================================================
 add_hook('ClientAreaPageViewTicket', 1, function (array $vars) {
 
-    $clientId = isset($_SESSION['uid']) ? (int) $_SESSION['uid'] : 0;
+    $clientId = CRMModule\CrmHelper::currentClientId();
 
     if (!$clientId) {
         return;
@@ -253,7 +254,7 @@ add_hook('ClientAreaPageViewTicket', 1, function (array $vars) {
     }
 
     $systemUrl  = $GLOBALS['CONFIG']['SystemURL'] ?? '';
-    $profileUrl = $systemUrl . '/index.php?m=crmmodule';
+    $ticketUrl  = $systemUrl . '/submitticket.php';
     $cssUrl     = htmlspecialchars($systemUrl . '/modules/addons/crmmodule/assets/css/crmmodule.css');
 
     $name    = htmlspecialchars($crm['display_name']);
@@ -266,8 +267,9 @@ add_hook('ClientAreaPageViewTicket', 1, function (array $vars) {
     $html .= '<div class="crm-ticket-client-strip">';
     $html .= '<img src="' . htmlspecialchars($imgUrl) . '" class="crm-strip-avatar" alt="">';
     $html .= '<span class="crm-strip-text">';
-    $html .= 'Your account manager is <strong>' . $name . '</strong>.';
-    $html .= ' <a href="' . htmlspecialchars($profileUrl) . '">View profile &rarr;</a>';
+    $html .= 'Your account manager is <strong>' . $name . '</strong>. ';
+    $html .= '<a href="' . htmlspecialchars($ticketUrl) . '" class="crm-strip-ticket-link">';
+    $html .= '<i class="fas fa-ticket-alt"></i> Contact via support ticket</a>';
     $html .= '</span>';
     $html .= '</div>';
 

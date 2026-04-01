@@ -42,6 +42,36 @@ class CrmHelper
     }
 
     /**
+     * Active client ID in the client area (WHMCS 8+ User model + legacy session).
+     */
+    public static function currentClientId(): int
+    {
+        try {
+            if (class_exists(\WHMCS\Authentication\CurrentUser::class)) {
+                $current = new \WHMCS\Authentication\CurrentUser();
+                if (method_exists($current, 'client')) {
+                    $client = $current->client();
+                    if ($client) {
+                        $id = 0;
+                        if (method_exists($client, 'getId')) {
+                            $id = (int) $client->getId();
+                        } elseif (isset($client->id)) {
+                            $id = (int) $client->id;
+                        }
+                        if ($id > 0) {
+                            return $id;
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Fall back to session
+        }
+
+        return (int) ($_SESSION['uid'] ?? 0);
+    }
+
+    /**
      * Returns the client's group information (read-only from core tables).
      *
      * @param int $clientId

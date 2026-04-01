@@ -16,7 +16,6 @@ if (!defined('WHMCS')) {
     die('This file cannot be accessed directly.');
 }
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use WHMCS\Database\Capsule as WhmcsCapsule;
 
 require_once __DIR__ . '/lib/CrmHelper.php';
@@ -150,15 +149,20 @@ function crmmodule_output($vars)
  */
 function crmmodule_clientarea($vars)
 {
-    $clientId = (int) ($_SESSION['uid'] ?? 0);
+    $systemUrl = rtrim($GLOBALS['CONFIG']['SystemURL'] ?? '', '/');
+    $cssHref   = $systemUrl . '/modules/addons/crmmodule/assets/css/crmmodule.css';
+
+    $clientId = CRMModule\CrmHelper::currentClientId();
 
     if (!$clientId) {
         return [
             'pagetitle'    => 'Your Account Manager',
             'breadcrumb'   => ['index.php?m=crmmodule' => 'Account Manager'],
-            'templatefile' => 'clientarea/profile',
+            'templatefile' => 'profile',
             'requirelogin' => true,
-            'vars'         => [],
+            'vars'         => [
+                'crm_css_href' => $cssHref,
+            ],
         ];
     }
 
@@ -172,18 +176,22 @@ function crmmodule_clientarea($vars)
             $crmData['profile_image'] ?? '',
             $crmData['contact_email'] ?? ''
         );
+        if (!empty($crmData['profile_image']) && !filter_var($crmData['profile_image'], FILTER_VALIDATE_URL)) {
+            $profileImageUrl = $systemUrl . '/' . $crmData['profile_image'];
+        }
     }
 
     return [
         'pagetitle'    => 'Your Account Manager',
         'breadcrumb'   => ['index.php?m=crmmodule' => 'Account Manager'],
-        'templatefile' => 'clientarea/profile',
+        'templatefile' => 'profile',
         'requirelogin' => true,
         'vars'         => [
             'crm'             => $crmData,
             'clientGroup'     => $group,
             'profileImageUrl' => $profileImageUrl,
             'moduleLink'      => $vars['modulelink'],
+            'crm_css_href'    => $cssHref,
         ],
     ];
 }

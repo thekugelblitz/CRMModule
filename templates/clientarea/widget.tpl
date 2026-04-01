@@ -1,6 +1,4 @@
-{* CRMModule — Client Area Homepage Widget *}
-{* Injected via ClientAreaHomepage hook *}
-{* Compatible with: WHMCS Six, Twenty-One, Lagom2 *}
+{* CRMModule — Client Area Homepage Widget (reference; hook builds HTML inline) *}
 
 <div class="crm-widget panel panel-default">
     <div class="panel-heading">
@@ -24,13 +22,14 @@
                 <span class="crm-widget-designation">{$crmWidgetDesignation|escape:'html'}</span>
                 {/if}
 
-                {if $crmWidgetBio}
-                <p class="crm-widget-bio">{$crmWidgetBio|truncate:90:'...'|escape:'html'}</p>
-                {/if}
-
-                <a href="{$crmWidgetProfileUrl|escape:'html'}" class="btn btn-sm btn-primary crm-widget-btn">
-                    <i class="fas fa-id-card"></i> View Profile
-                </a>
+                <div class="crm-widget-actions">
+                    <a href="submitticket.php" class="btn btn-sm btn-primary crm-widget-btn">
+                        <i class="fas fa-ticket-alt"></i> Contact via support ticket
+                    </a>
+                    <a href="{$crmWidgetProfileUrl|escape:'html'}" class="btn btn-sm btn-default crm-widget-btn crm-widget-btn-secondary">
+                        <i class="fas fa-id-card"></i> View profile
+                    </a>
+                </div>
             </div>
 
         </div>
